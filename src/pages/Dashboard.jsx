@@ -21,6 +21,7 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15; // Number of items to show per page
   const [scraping, setScraping] = useState(false);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
   // API service methods mapping
   const apiMethods = {
@@ -74,13 +75,30 @@ const Dashboard = () => {
     );
   });
 
+  const sortedListings = React.useMemo(() => {
+    if (!sortConfig.key) return filteredListings;
+    const sorted = [...filteredListings].sort((a, b) => {
+      if (a[sortConfig.key] === undefined || b[sortConfig.key] === undefined) return 0;
+      if (typeof a[sortConfig.key] === 'number' && typeof b[sortConfig.key] === 'number') {
+        return sortConfig.direction === 'asc'
+          ? a[sortConfig.key] - b[sortConfig.key]
+          : b[sortConfig.key] - a[sortConfig.key];
+      }
+      // For string comparison
+      return sortConfig.direction === 'asc'
+        ? String(a[sortConfig.key]).localeCompare(String(b[sortConfig.key]))
+        : String(b[sortConfig.key]).localeCompare(String(a[sortConfig.key]));
+    });
+    return sorted;
+  }, [filteredListings, sortConfig]);
+
   // Calculate paginated listings
   const indexOfLastListing = currentPage * itemsPerPage;
   const indexOfFirstListing = indexOfLastListing - itemsPerPage;
-  const currentListings = filteredListings.slice(indexOfFirstListing, indexOfLastListing);
+  const currentListings = sortedListings.slice(indexOfFirstListing, indexOfLastListing);
 
   // Calculate total pages
-  const totalPages = Math.ceil(filteredListings.length / itemsPerPage);
+  const totalPages = Math.ceil(sortedListings.length / itemsPerPage);
 
   // Pagination controls
   const renderPagination = () => {
@@ -145,6 +163,14 @@ const Dashboard = () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
   };
 
   return (
@@ -215,9 +241,11 @@ const Dashboard = () => {
                 listings={currentListings}
                 loading={isLoading}
                 website={selectedWebsite}
+                handleSort={handleSort}
+                sortConfig={sortConfig}
               />
               {/* Pagination Controls */}
-              {filteredListings.length > itemsPerPage && (
+              {sortedListings.length > itemsPerPage && (
                 <div className="flex justify-center mt-4">
                   <button
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
