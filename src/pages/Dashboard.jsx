@@ -187,19 +187,21 @@ const Dashboard = () => {
                 ))}
               </select>
             </div>
-            <button
-              onClick={handleScrape}
-              className="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600"
-              disabled={scraping}
-            >
-              {scraping ? 'Scraping...' : 'Call Scraper'}
-            </button>
-            <button
-              onClick={handleDownload}
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 ml-2"
-            >
-              Download Excel
-            </button>
+            <div className="flex">
+              <button
+                onClick={handleScrape}
+                className="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600"
+                disabled={scraping}
+              >
+                {scraping ? 'Scraping...' : 'Call Scraper'}
+              </button>
+              <button
+                onClick={handleDownload}
+                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 ml-2"
+              >
+                Download Excel
+              </button>
+            </div>
           </div>
 
           {error ? (
