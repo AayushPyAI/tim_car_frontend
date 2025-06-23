@@ -7,12 +7,12 @@ import { ApiService } from '../services/api';
 import { WEBSITES } from '../types';
 
 const scrapeEndpoints = {
-  [WEBSITES.EBAY]: '/ebay/scrape/',
-  [WEBSITES.AUTOTRADER]: '/autotrader/scrape/',
-  [WEBSITES.CARS]: '/cars/scrape/',
-  [WEBSITES.CARGURUS]: '/cargurus/scrape/',
-  [WEBSITES.DUPONT]: '/dupont/scrape/',
-  [WEBSITES.CRAIGSLIST]: '/craigslist/scrape/',
+  [WEBSITES.EBAY]: '/ebay/scrape',
+  [WEBSITES.AUTOTRADER]: '/autotrader/scrape',
+  [WEBSITES.CARS]: '/cars/scrape',
+  [WEBSITES.CARGURUS]: '/cargurus/scrape',
+  [WEBSITES.DUPONT]: '/dupont/scrape',
+  [WEBSITES.CRAIGSLIST]: '/craigslist/scrape',
 };
 
 const Dashboard = () => {
