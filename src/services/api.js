@@ -23,7 +23,7 @@ export class ApiService {
     }
   }
 
-  static async getEbayListings(skip = 0, limit = 100) {
+  static async getEbayListings(skip = 0, limit = 1000) {
     return ApiService.fetchWithErrorHandling(
       `${API_BASE_URL}/ebay/listings/?skip=${skip}&limit=${limit}`
     );
@@ -31,34 +31,34 @@ export class ApiService {
   
 
   // Add methods for other websites as you implement their backends
-  static async getAutotraderListings(skip = 0, limit = 100) {
+  static async getAutotraderListings(skip = 0, limit = 1000) {
     // Placeholder - implement when backend endpoint is ready
     return ApiService.fetchWithErrorHandling(
       `${API_BASE_URL}/autotrader/listings/?skip=${skip}&limit=${limit}`
     );
   }
 
-  static async getCarsListings(skip = 0, limit = 100) {
+  static async getCarsListings(skip = 0, limit = 1000) {
     // Placeholder - implement when backend endpoint is ready
     return ApiService.fetchWithErrorHandling(
       `${API_BASE_URL}/cars/list/?skip=${skip}&limit=${limit}`
     );
   }
 
-  static async getCargurusListings(skip = 0, limit = 100) {
+  static async getCargurusListings(skip = 0, limit = 1000) {
     // Placeholder - implement when backend endpoint is ready
     return ApiService.fetchWithErrorHandling(
       `${API_BASE_URL}/cargurus/list/?skip=${skip}&limit=${limit}`
     );
   }
 
-  static async getDupontListings(skip = 0, limit = 100) {
+  static async getDupontListings(skip = 0, limit = 1000) {
     return ApiService.fetchWithErrorHandling(
       `${API_BASE_URL}/dupont/list?skip=${skip}&limit=${limit}`
     );
   }
 
-  static async getCraigslistListings(skip = 0, limit = 100) {
+  static async getCraigslistListings(skip = 0, limit = 1000) {
     // Placeholder - implement when backend endpoint is ready
     return ApiService.fetchWithErrorHandling(
       `${API_BASE_URL}/craigslist/list?skip=${skip}&limit=${limit}`

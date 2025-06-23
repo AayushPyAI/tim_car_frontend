@@ -6,11 +6,21 @@ import ListingsTable from '../components/ListingsTable';
 import { ApiService } from '../services/api';
 import { WEBSITES } from '../types';
 
+const scrapeEndpoints = {
+  [WEBSITES.EBAY]: '/ebay/scrape/',
+  [WEBSITES.AUTOTRADER]: '/autotrader/scrape/',
+  [WEBSITES.CARS]: '/cars/scrape/',
+  [WEBSITES.CARGURUS]: '/cargurus/scrape/',
+  [WEBSITES.DUPONT]: '/dupont/scrape/',
+  [WEBSITES.CRAIGSLIST]: '/craigslist/scrape/',
+};
+
 const Dashboard = () => {
   const [selectedWebsite, setSelectedWebsite] = useState(WEBSITES.EBAY);
   const [filters, setFilters] = useState({ make: '', model: '', year: '' });
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Number of items to show per page
+  const itemsPerPage = 15; // Number of items to show per page
+  const [scraping, setScraping] = useState(false);
 
   // API service methods mapping
   const apiMethods = {
@@ -91,6 +101,52 @@ const Dashboard = () => {
 
   console.log([...new Set(listings.map(listing => listing.year))]);
 
+  const handleScrape = async () => {
+    setScraping(true);
+    try {
+      const endpoint = scrapeEndpoints[selectedWebsite];
+      const res = await fetch(`http://localhost:8000${endpoint}`, {
+        method: 'POST',
+      });
+      const data = await res.json();
+      alert(`Scraped ${data.added} listings!`);
+      refetch(); // Refresh listings after scraping
+    } catch (err) {
+      alert('Scraping failed!');
+    }
+    setScraping(false);
+  };
+
+  const handleDownload = () => {
+    if (!filteredListings.length) {
+      alert('No data to download!');
+      return;
+    }
+
+    const keys = Object.keys(filteredListings[0]);
+    const csvRows = [
+      keys.join(','),
+      ...filteredListings.map(row =>
+        keys.map(key => {
+          const value = row[key] === null || row[key] === undefined ? '' : row[key];
+          return `"${String(value).replace(/"/g, '""')}"`;
+        }).join(',')
+      )
+    ];
+
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${selectedWebsite}_listings.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
@@ -110,31 +166,40 @@ const Dashboard = () => {
         {/* Content Area */}
         <main className="flex-1 overflow-y-auto p-6">
           {/* Filter Section */}
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold">Filters</h2>
+          <div className="mb-4 flex items-end justify-between">
             <div className="flex space-x-4">
               <select onChange={(e) => setFilters({ ...filters, make: e.target.value })}>
                 <option value="">Select Make</option>
-                {/* Populate with unique makes from listings, excluding empty values */}
                 {[...new Set(listings.map(listing => listing.make).filter(make => make))].map(make => (
                   <option key={make} value={make}>{make}</option>
                 ))}
               </select>
               <select onChange={(e) => setFilters({ ...filters, model: e.target.value })}>
                 <option value="">Select Model</option>
-                {/* Populate with unique models from listings, excluding empty values */}
                 {[...new Set(listings.map(listing => listing.model).filter(model => model))].map(model => (
                   <option key={model} value={model}>{model}</option>
                 ))}
               </select>
               <select onChange={(e) => setFilters({ ...filters, year: e.target.value })}>
                 <option value="">Select Year</option>
-                {/* Populate with unique years from listings, excluding empty values */}
                 {[...new Set(listings.map(listing => normalizeYear(listing.year)).filter(year => year))].map(year => (
                   <option key={year} value={year}>{year}</option>
                 ))}
               </select>
             </div>
+            <button
+              onClick={handleScrape}
+              className="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600"
+              disabled={scraping}
+            >
+              {scraping ? 'Scraping...' : 'Call Scraper'}
+            </button>
+            <button
+              onClick={handleDownload}
+              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 ml-2"
+            >
+              Download Excel
+            </button>
           </div>
 
           {error ? (
