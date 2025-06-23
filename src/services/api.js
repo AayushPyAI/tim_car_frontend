@@ -1,6 +1,6 @@
-const API_BASE_URL = 'http://localhost:8000'; // Update this to your FastAPI server URL
+const API_BASE_URL = 'https://www.luxcarnetwork.com/api'; // Update this to your FastAPI server URL
 
-export class ApiService {
+export class ApiService { 
   static async fetchWithErrorHandling(url, options = {}) {
     try {
       const response = await fetch(url, {

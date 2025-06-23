@@ -123,7 +123,7 @@ const Dashboard = () => {
     setScraping(true);
     try {
       const endpoint = scrapeEndpoints[selectedWebsite];
-      const res = await fetch(`http://localhost:8000${endpoint}`, {
+      const res = await fetch(`https://www.luxcarnetwork.com/api${endpoint}`, {
         method: 'POST',
       });
       const data = await res.json();
