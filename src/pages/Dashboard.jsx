@@ -103,14 +103,59 @@ const Dashboard = () => {
   // Pagination controls
   const renderPagination = () => {
     const pages = [];
-    for (let i = 1; i <= totalPages; i++) {
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = startPage + maxPagesToShow - 1;
+    if (endPage > totalPages) {
+      endPage = totalPages;
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    // Always show first page
+    pages.push(
+      <button
+        key={1}
+        onClick={() => setCurrentPage(1)}
+        className={`mx-1 px-3 py-1 rounded border ${currentPage === 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}
+      >
+        1
+      </button>
+    );
+
+    // Show ellipsis if there's a gap after first page
+    if (startPage > 2) {
+      pages.push(<span key="start-ellipsis" className="mx-1">...</span>);
+    }
+
+    // Show middle pages
+    for (let i = startPage; i <= endPage; i++) {
+      if (i !== 1 && i !== totalPages) {
+        pages.push(
+          <button
+            key={i}
+            onClick={() => setCurrentPage(i)}
+            className={`mx-1 px-3 py-1 rounded border ${currentPage === i ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}
+          >
+            {i}
+          </button>
+        );
+      }
+    }
+
+    // Show ellipsis if there's a gap before last page
+    if (endPage < totalPages - 1) {
+      pages.push(<span key="end-ellipsis" className="mx-1">...</span>);
+    }
+
+    // Always show last page (if there's more than one page)
+    if (totalPages > 1) {
       pages.push(
         <button
-          key={i}
-          onClick={() => setCurrentPage(i)}
-          className={`mx-1 px-3 py-1 rounded border ${currentPage === i ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}
+          key={totalPages}
+          onClick={() => setCurrentPage(totalPages)}
+          className={`mx-1 px-3 py-1 rounded border ${currentPage === totalPages ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}
         >
-          {i}
+          {totalPages}
         </button>
       );
     }
@@ -252,7 +297,11 @@ const Dashboard = () => {
                   <button
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="mx-1 px-3 py-1 rounded border bg-gray-200 text-gray-800 hover:bg-gray-300"
+                    className={`mx-1 px-3 py-1 rounded border ${
+                      currentPage === 1 
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                        : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                    }`}
                   >
                     Previous
                   </button>
@@ -260,7 +309,11 @@ const Dashboard = () => {
                   <button
                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="mx-1 px-3 py-1 rounded border bg-gray-200 text-gray-800 hover:bg-gray-300"
+                    className={`mx-1 px-3 py-1 rounded border ${
+                      currentPage === totalPages 
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                        : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                    }`}
                   >
                     Next
                   </button>
