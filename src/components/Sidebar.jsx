@@ -23,13 +23,10 @@ const Sidebar = ({ selectedWebsite, onWebsiteSelect }) => {
   return (
     <div className="w-64 bg-white shadow-lg h-screen flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center">
-            <Car className="w-5 h-5 text-white" />
-          </div>
-          <span className="text-xl font-semibold text-gray-800">CarZoni</span>
-        </div>
+      <div className="px-2 border-b border-gray-200">
+      
+          <img src="/logo.jpg" alt="CarZoni Logo" className=" w-full rounded-lg object-contain mx-auto" />
+        
       </div>
 
       {/* Navigation */}
