@@ -259,7 +259,7 @@ const Dashboard = () => {
               </select>
             </div>
             <div className="flex">
-              {selectedWebsite !== WEBSITES.DUPONT && (
+              {selectedWebsite !== WEBSITES.EBAY && selectedWebsite !== WEBSITES.DUPONT && (
                 <button
                   onClick={handleScrape}
                   className="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600"
